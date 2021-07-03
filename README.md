@@ -10,3 +10,5 @@ Using React Hooks Pluralsight course by Peter Kellner for Accenture Full Stack U
     "start": "next start" Launches the app 
 
 With next you can navigate to a component just adding the name to the localhost url http://localhost:3000/ImageChangeOnMouseOver was added to pages and you can just navigate there
+
+Added navigation to ImageChangeOnScroll
