@@ -1,30 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 const InputElement = () => {
 
-    const [inputText, setinputText] = useState("");
-    const [historyList, setHistoryList] = useState([])
-    const auxFunction = (e) => {
-            const newInputText = e.target.value;
-            setinputText(newInputText);
-            setHistoryList([...historyList, newInputText]);
-        }
+    const [isLoading, setIsLoading] = useState(true);
     
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 2000);
+    });
     return (
+        isLoading ?
+        <div>Is Loading</div> :
         <>
-            <input
-                onChange={auxFunction}
-                placeholder = "Enter some text"
-            />
-            <p>{inputText}</p>
-            <hr/>
-            <br/>
-            <ul>
-            {historyList.map((history) => <div>{history}</div>)}
-            </ul>
-            
+            <input placeholder = "Enter some text"/>                      
         </>
     );
 };
 
-export default InputElement;
+export default InputElement; 
