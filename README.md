@@ -11,4 +11,7 @@ Using React Hooks Pluralsight course by Peter Kellner for Accenture Full Stack U
 
 With next you can navigate to a component just adding the name to the localhost url http://localhost:3000/ImageChangeOnMouseOver was added to pages and you can just navigate there
 
-Added navigation to ImageChangeOnScroll
+Added navigation to ImageChangeOnScroll.
+Stasrt with NPM run dev
+Well make an app using those three hooks.
+1. Install 
