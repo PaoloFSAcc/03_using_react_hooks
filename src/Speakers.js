@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext, useReducer} from 'react';
 import { Header } from './Header';
 import { Menu } from './Menu';
 import SpeakerData from './SpeakerData';
 import SpeakerDetail from './SpeakerDetail';
-
-
+import {ConfigContext} from './App';
 
 const Speakers = ({}) => {
 
@@ -12,22 +11,42 @@ const Speakers = ({}) => {
     const [speakingSunday, setSpeakingSunday] = useState(true);
 
     const [speakerList, setSpeakerList] = useState([]);
+    // This is a refactor of the same functionality as useState
+    //const [speakerList, setSpeakerList] = useReducer((state, action)=> action, []);
+
+    function speakersReducer(state, action) {
+        switch(action.type) {
+            case "setSpeakerList": {
+                return action.data;
+            }
+            default:
+                return state;
+        }
+    };
+
+    //const [speakerList, dispatch] = useReducer(speakersReducer, []);
+
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect( () => {
+    const context = useContext(ConfigContext);
+
+    useEffect(() => {
         setIsLoading(true);
-        new Promise(function(resolve) {
-            setTimeout(function () {
-                resolve();
-            }, 1000)
-        }).then(()=>{
-            setIsLoading(false);
+        new Promise(function (resolve) {
+          setTimeout(function () {
+            resolve();
+          }, 1000);
+        }).then(() => {
+          setIsLoading(false);
+          const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
+            return (speakingSaturday && sat) || (speakingSunday && sun);
+          });
+          setSpeakerList(speakerListServerFilter);
         });
-        setSpeakerList(SpeakerData);
         return () => {
-            console.log('cleanup');
-        }
-    }, []);
+          console.log('cleanup');
+        };
+      }, []); // [speakingSunday, speakingSaturday]);
 
     const handleCheckSaturday = () => {
         setSpeakingSaturday(!speakingSaturday);
@@ -73,6 +92,7 @@ const Speakers = ({}) => {
             <Menu/>
             <div className="container">
                 <div className="btn-toolbar margintopbottom5 checkbox-bigger">
+                    {context.showSpeakerSpeakingDays === false ? null : (
                     <div className="hide">
                         <div className="form-check-inline">
                             <label className="form-check-label">
@@ -97,7 +117,7 @@ const Speakers = ({}) => {
                             </label>
                         </div>
                     </div>
-
+                    )}
                 </div>
                 <div className="row">
                     <div className="card-deck">
