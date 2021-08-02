@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext, useReducer} from 'react';
+import React, {useEffect, useState, useContext, useReducer, useCallback, useMemo } from 'react';
 import { Header } from './Header';
 import { Menu } from './Menu';
 import SpeakerData from './SpeakerData';
@@ -50,21 +50,23 @@ const Speakers = ({}) => {
         setSpeakingSunday(!speakingSunday);
     }
 
-    const speakerListFiltered = isLoading ? [] :
-        speakerList.filter(
-            ({sat, sun}) => 
-                (speakingSaturday && sat || speakingSunday && sun),
-        ).sort( function(a,b) {
-            if (a.firstName < b.firstName) {
-                return -1;
-            }
-            if (a.firstName > b.firstName) {
-                return 1;
-            }
-            return 0;
-        })
+    const newSpeakersList = useMemo( () => speakerList.filter(
+        ({sat, sun}) => 
+            (speakingSaturday && sat || speakingSunday && sun),
+    ).sort( function(a,b) {
+        if (a.firstName < b.firstName) {
+            return -1;
+        }
+        if (a.firstName > b.firstName) {
+            return 1;
+        }
+        return 0;
+    }), [speakingSaturday, speakingSunday, speakerList])
 
-    const heartFavoriteHandler = (e, favoriteValue) => {
+    const speakerListFiltered = isLoading ? [] : newSpeakersList;
+        
+
+    const heartFavoriteHandler = useCallback( (e, favoriteValue) => {
         e.preventDefault();
         const sessionId = parseInt(e.target.attributes['data-sessionid'].value);
     
@@ -81,7 +83,7 @@ const Speakers = ({}) => {
         //     }),
         // );
         // //console.log("changing session favorte to " + favoriteValue);
-        };
+        }, []);
 
     if (isLoading) {
         return <div>Loading</div>
