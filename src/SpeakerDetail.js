@@ -1,10 +1,11 @@
-import React from 'react';
-import ImageToggleOnScroll from './ImageToggleOnScroll';
+import React from "react";
+import ImageToggleOnScroll from "./ImageToggleOnScroll";
 
-const SpeakerDetail = React.memo(({id, firstName, lastName, bio, favorite, onHeartFavoriteHandler}) => {
-    return(
+const SpeakerDetail = React.memo(({ speakerRec, onHeartFavoriteHandler }) => {
+    const { id, firstName, lastName, bio, favorite } = speakerRec;
+    return (
         <div className="card col-4 cardmin">
-            <ImageToggleOnScroll 
+            <ImageToggleOnScroll
                 className="card-img-top"
                 primaryImg={`/static/speakers/bw/Speaker-${id}.jpg`}
                 secondaryImg={`/static/speakers/Speaker-${id}.jpg`}
@@ -13,11 +14,12 @@ const SpeakerDetail = React.memo(({id, firstName, lastName, bio, favorite, onHea
             <div className="card-body">
                 <h4 className="card-title">
                     <button
-                        data-sessionid={id}
-                        className={favorite ? 'heartredbutton' : 'heartdarkbutton'}
+                        className={
+                            favorite ? "heartredbutton" : "heartdarkbutton"
+                        }
                         onClick={(e) => {
-                            onHeartFavoriteHandler(e, !favorite);
-                          }}
+                            onHeartFavoriteHandler(e, speakerRec);
+                        }}
                     />
                     <span>
                         {firstName} {lastName}

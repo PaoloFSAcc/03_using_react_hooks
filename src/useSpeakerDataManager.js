@@ -1,31 +1,37 @@
-import React, {useEffect, useReducer } from 'react';
-import SpeakerData from './SpeakerData';
-import speakersReducer from './speakersReducer'
+import React, { useEffect, useReducer } from "react";
+import SpeakerData from "./SpeakerData";
+import speakersReducer from "./speakersReducer";
 
-function useSpeakerDataManager () {
-        const [{ isLoading, speakerList}, dispatch] = useReducer(speakersReducer, {
+function useSpeakerDataManager() {
+    const [{ isLoading, speakerList }, dispatch] = useReducer(speakersReducer, {
         isLoading: true,
-        speakerList: []
+        speakerList: [],
     });
-    
+
+    function toggleSpeakerFavorite(speakerRec) {
+        speakerRec.favorite == true
+            ? dispatch({ type: "unfavorite", id: speakerRec.id })
+            : dispatch({ type: "favorite", id: speakerRec.id });
+    }
+
     useEffect(() => {
         new Promise(function (resolve) {
-          setTimeout(function () {
-            resolve();
-          }, 1000);
+            setTimeout(function () {
+                resolve();
+            }, 1000);
         }).then(() => {
-          //setSpeakerList(speakerListServerFilter);
-          dispatch({ 
-              type: "setSpeakerList",
-              data: SpeakerData
-          });
+            //setSpeakerList(speakerListServerFilter);
+            dispatch({
+                type: "setSpeakerList",
+                data: SpeakerData,
+            });
         });
         return () => {
-          console.log('cleanup');
+            console.log("cleanup");
         };
-      }, []); // [speakingSunday, speakingSaturday]);
+    }, []); // [speakingSunday, speakingSaturday]);
 
-      return {isLoading, speakerList, dispatch};
+    return { isLoading, speakerList, toggleSpeakerFavorite };
 }
 
 export default useSpeakerDataManager;
