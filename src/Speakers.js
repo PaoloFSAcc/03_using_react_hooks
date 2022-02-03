@@ -1,47 +1,17 @@
-import React, {useEffect, useState, useContext, useReducer, useCallback, useMemo } from 'react';
+import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { Header } from './Header';
 import { Menu } from './Menu';
-import SpeakerData from './SpeakerData';
 import SpeakerDetail from './SpeakerDetail';
 import {ConfigContext} from './App';
-import speakersReducer from './speakersReducer'
+import useSpeakerDataManager from './useSpeakerDataManager';
 
 const Speakers = ({}) => {
 
     const [speakingSaturday, setSpeakingSaturday] = useState(true);
     const [speakingSunday, setSpeakingSunday] = useState(true);
-
-    //const [speakerList, setSpeakerList] = useState([]);
-    // This is a refactor of the same functionality as useState
-    //const [speakerList, setSpeakerList] = useReducer((state, action)=> action, []);
-
-    const [speakerList, dispatch] = useReducer(speakersReducer, []);
-
-    const [isLoading, setIsLoading] = useState(true);
-
     const context = useContext(ConfigContext);
 
-    useEffect(() => {
-        setIsLoading(true);
-        new Promise(function (resolve) {
-          setTimeout(function () {
-            resolve();
-          }, 1000);
-        }).then(() => {
-          setIsLoading(false);
-          const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
-            return (speakingSaturday && sat) || (speakingSunday && sun);
-          });
-          //setSpeakerList(speakerListServerFilter);
-          dispatch({ 
-              type: "setSpeakerList",
-              data: speakerListServerFilter
-          });
-        });
-        return () => {
-          console.log('cleanup');
-        };
-      }, []); // [speakingSunday, speakingSaturday]);
+    const {isLoading, speakerList, dispatch} = useSpeakerDataManager();
 
     const handleCheckSaturday = () => {
         setSpeakingSaturday(!speakingSaturday);
@@ -72,7 +42,7 @@ const Speakers = ({}) => {
     
         dispatch({
             type: favoriteValue === true ? 'favorite' : 'unfavorite',
-            sessionId,
+            id: sessionId,
         });
         // setSpeakerList(
         //     speakerList.map((item) => {
